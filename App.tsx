@@ -1,11 +1,10 @@
 import './App.css'
-
 function App() {
 
   return (
-    <>
-    <h1 className="text-blue-500 text-2">SmartHire</h1>
-    </>
+    <div>
+      <h1>My First React App</h1> 
+    </div>
   )
 }
 
