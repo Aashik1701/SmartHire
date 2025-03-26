@@ -1,11 +1,25 @@
+import colors from './src/theme/colors.js';
+
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
+    "./App.tsx",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: colors.COLORS.primary,
+        secondary: colors.COLORS.secondary,
+        success: colors.COLORS.success,
+        warning: colors.COLORS.warning,
+        error: colors.COLORS.error,
+        neutral: colors.COLORS.neutral,
+      },
+    },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
 }
