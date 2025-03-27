@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { auth } from '../../firebase';
 
 interface RegisterProps {
   setIsAuthenticated: (value: boolean) => void;
@@ -50,15 +52,22 @@ const Register = ({ setIsAuthenticated }: RegisterProps) => {
     setIsLoading(true);
 
     try {
-      // This is a simulated registration
-      // In a real app, this would be an API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Create user with Firebase
+      const userCredential = await createUserWithEmailAndPassword(
+        auth, 
+        formData.email, 
+        formData.password
+      );
+      
+      // Update user profile with name
+      await updateProfile(userCredential.user, {
+        displayName: formData.name
+      });
       
       setIsAuthenticated(true);
       navigate('/');
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err) {
-      setError('An error occurred. Please try again.');
+    } catch (err: any) {
+      setError(err.message || 'An error occurred during registration');
     } finally {
       setIsLoading(false);
     }
@@ -79,7 +88,7 @@ const Register = ({ setIsAuthenticated }: RegisterProps) => {
               <div className="flex">
                 <div className="flex-shrink-0">
                   <svg className="w-5 h-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                   </svg>
                 </div>
                 <div className="ml-3">

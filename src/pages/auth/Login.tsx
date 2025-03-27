@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../components/ui/Button';
 import FormControl from '../../components/ui/FormControl';
 import Input from '../../components/ui/Input';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import SignInwithGoogle from './SignInwithGoogle';
 
 interface LoginProps {
   setIsAuthenticated: (value: boolean) => void;
@@ -12,7 +14,6 @@ const Login = ({ setIsAuthenticated }: LoginProps) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    rememberMe: false,
   });
   const [errors, setErrors] = useState<{[key: string]: string}>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -57,21 +58,12 @@ const Login = ({ setIsAuthenticated }: LoginProps) => {
     setIsLoading(true);
 
     try {
-      // This is a simulated login
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      if (formData.email === 'user@example.com' && formData.password === 'password') {
-        setIsAuthenticated(true);
-        navigate('/');
-      } else {
-        setErrors({ 
-          form: 'Invalid email or password'
-        });
-      }
-    } catch {
-      // Removed the unused error variable
-      setErrors({
-        form: 'An error occurred. Please try again.'
+      await signInWithEmailAndPassword(auth, formData.email, formData.password);
+      setIsAuthenticated(true);
+      navigate('/');
+    } catch (error: any) {
+      setErrors({ 
+        form: error.message || 'Invalid email or password'
       });
     } finally {
       setIsLoading(false);
@@ -151,12 +143,6 @@ const Login = ({ setIsAuthenticated }: LoginProps) => {
                   Remember me
                 </label>
               </div>
-
-              <div className="text-sm">
-                <a href="#" className="font-medium text-primary-600 hover:text-primary-500">
-                  Forgot your password?
-                </a>
-              </div>
             </div>
 
             <Button
@@ -189,6 +175,7 @@ const Login = ({ setIsAuthenticated }: LoginProps) => {
               </p>
             </div>
           </div>
+        <SignInwithGoogle />
         </div>
       </div>
     </div>
